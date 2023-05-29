@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "sessions")
+@SecondaryTable(name = "venues", pkJoinColumns = @PrimaryKeyJoinColumn(name = "venue_id"))
 public class Session {
 
     @Id
@@ -29,6 +30,15 @@ public class Session {
     @Column(name = "length")
     private Integer sessionLength;
 
+    @Column(name = "venue_name", table = "venues")
+    private String venueName;
+
+    @Column(name = "venue_city", table = "venues")
+    private String venueCity;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "session")
+    private List<Attendee> attendees;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(
             name = "session_speakers",
@@ -37,5 +47,11 @@ public class Session {
     )
     private List<Speaker> speakers = new java.util.ArrayList<>();
 
+    public void setAttendees(List<Attendee> attendees) {
+        this.attendees = attendees;
 
+        if (null != attendees) {
+            attendees.forEach(attendee -> attendee.setSession(this));
+        }
+    }
 }

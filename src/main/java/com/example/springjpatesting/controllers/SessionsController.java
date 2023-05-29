@@ -31,7 +31,8 @@ public class SessionsController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Session create(@RequestBody final Session session) {
-        return sessionRepository.saveAndFlush(session);
+        System.out.println("SESSION: " + session);
+        return sessionRepository.save(session);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
