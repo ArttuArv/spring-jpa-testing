@@ -23,10 +23,11 @@ public class Attendee {
     @Column(name = "last_name")
     private String lastName;
 
+    @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne
-    @JsonIgnore
+    @JoinColumn(name = "session_id")
     private Session session;
 
 }
