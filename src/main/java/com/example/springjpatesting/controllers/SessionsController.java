@@ -1,6 +1,7 @@
 package com.example.springjpatesting.controllers;
 
 import com.example.springjpatesting.models.Session;
+import com.example.springjpatesting.models.Speaker;
 import com.example.springjpatesting.repositories.SessionRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,12 @@ public class SessionsController {
     @ResponseStatus(HttpStatus.CREATED)
     public Session create(@RequestBody final Session session) {
         System.out.println("SESSION: " + session);
-        return sessionRepository.save(session);
+
+        for (Speaker speaker : session.getSpeakers()) {
+            speaker.getAddress().setSpeaker(speaker);
+        }
+
+        return sessionRepository.saveAndFlush(session);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)

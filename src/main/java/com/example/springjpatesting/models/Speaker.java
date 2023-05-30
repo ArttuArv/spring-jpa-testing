@@ -1,10 +1,9 @@
 package com.example.springjpatesting.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,6 +12,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "speakers")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Speaker {
 
     @Id
@@ -41,5 +41,15 @@ public class Speaker {
     @ManyToMany(mappedBy = "speakers")
     @JsonIgnore
     private List<Session> sessions;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            mappedBy = "speaker",
+            fetch = FetchType.LAZY
+    )
+    private SpeakerAddress address;
+
 
 }
